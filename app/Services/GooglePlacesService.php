@@ -114,6 +114,8 @@ class GooglePlacesService
                         ];
                     })->toArray();
 
+                    $mapped = $this->filterByLocation($mapped, $location);
+                    $mapped = $this->filterByKeyword($mapped, $query);
                     $uniqueCached = $this->deduplicateResults($mapped);
                     if (!empty($uniqueCached)) {
                         Log::info("Returned " . count($uniqueCached) . " unique cached DB businesses for '{$query} in {$location}' due to Google API quota limit");
@@ -282,6 +284,24 @@ class GooglePlacesService
         // Deduplicate keywords
         $keywords = array_unique($keywords);
 
+        // ── CONFLICTING DISTRICT EXCLUSION ─────────────────────────
+        // In Tamil Nadu, some areas share names with other districts (e.g. "Ramanathapuram" in Coimbatore city).
+        // If searching Ramanathapuram district, reject any result that explicitly contains "Coimbatore" or other district names.
+        $allTnDistricts = [
+            'chennai', 'coimbatore', 'madurai', 'tiruchirappalli', 'trichy', 'salem', 
+            'tirunelveli', 'tiruppur', 'tirupur', 'erode', 'vellore', 'thoothukudi', 
+            'tuticorin', 'dindigul', 'thanjavur', 'ranipet', 'virudhunagar', 'sivakasi', 
+            'karur', 'nilgiris', 'ooty', 'krishnagiri', 'hosur', 'kanyakumari', 'nagercoil', 
+            'cuddalore', 'kanchipuram', 'tiruvannamalai', 'pudukkottai', 'dharmapuri', 
+            'ramanathapuram', 'sivaganga', 'namakkal', 'theni', 'tiruvallur', 'tiruvarur', 
+            'nagapattinam', 'viluppuram', 'villupuram', 'chengalpattu', 'tenkasi', 
+            'kallakurichi', 'mayiladuthurai', 'ariyalur', 'perambalur'
+        ];
+
+        $conflictingDistricts = array_values(array_filter($allTnDistricts, function ($d) use ($primaryDistrict, $keywords) {
+            return $d !== $primaryDistrict && !in_array($d, $keywords);
+        }));
+
         // Filter: keep only results whose address contains at least one keyword
         $filtered = [];
         $removedCount = 0;
@@ -304,6 +324,20 @@ class GooglePlacesService
             }
 
             if ($matched) {
+                // Check if address explicitly belongs to another district
+                $hasOtherDistrict = false;
+                foreach ($conflictingDistricts as $otherDistrict) {
+                    if (str_contains($address, $otherDistrict)) {
+                        $hasOtherDistrict = true;
+                        break;
+                    }
+                }
+
+                if ($hasOtherDistrict) {
+                    $removedCount++;
+                    continue;
+                }
+
                 $filtered[] = $res;
             } else {
                 $removedCount++;
