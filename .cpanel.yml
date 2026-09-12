@@ -1,0 +1,6 @@
+﻿---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/$USER/public_html/
+    - /bin/rsync -av --delete --exclude='.git*' --exclude='.cpanel.yml' --exclude='.env' --exclude='storage/logs/*' ./ $DEPLOYPATH
+    - php $DEPLOYPATH/artisan cache:clear || true

@@ -1,0 +1,1223 @@
+{
+  "info": {
+    "_postman_id": "doxa-business-finder-api-v1",
+    "name": "Doxa Business Finder API Collection",
+    "description": "Complete Postman collection for Doxa Business Finder SaaS platform. Supports dynamic {{variables}}, bearer token authentication, automated auth token handling, and all endpoints across Auth, Search, Leads, CRM, Credits, Subscriptions, Payments, Reports, and Notifications.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lead_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "followup_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "quotation_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "package_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "plan_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "team_user_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "notification_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01. Authentication & Security",
+      "item": [
+        {
+          "name": "Register New Tenant & Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Token saved: ' + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Saranya A\",\n  \"email\": \"saranyaanath2005@gmail.com\",\n  \"phone\": \"9876543210\",\n  \"password\": \"Sa@12345678\",\n  \"password_confirmation\": \"Sa@12345678\",\n  \"company_name\": \"Doxa Infotech Solutions\",\n  \"device_name\": \"postman_client\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": ["{{base_url}}"],
+              "path": ["register"]
+            }
+          }
+        },
+        {
+          "name": "Login User (Get Sanctum Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Token saved: ' + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"saranyaanath2005@gmail.com\",\n  \"password\": \"Sa@12345678\",\n  \"device_name\": \"postman_client\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "Send / Resend OTP to Email",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"saranyaanath2005@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/send-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify 6-Digit Email OTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Verified token saved: ' + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"saranyaanath2005@gmail.com\",\n  \"otp\": \"829143\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password (Request Reset OTP)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"saranyaanath2005@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password with OTP",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"saranyaanath2005@gmail.com\",\n  \"otp\": \"123456\",\n  \"password\": \"NewPassword@123\",\n  \"password_confirmation\": \"NewPassword@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout (Revoke Current Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Profile & Onboarding",
+      "item": [
+        {
+          "name": "Get Authenticated User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Saranya Anand\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Tenant Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"business_category\": \"Software & Marketing\",\n  \"target_locations\": [\"Chennai\", \"Bangalore\", \"Coimbatore\"],\n  \"services_offered\": [\"Lead Gen\", \"Web Dev\", \"SEO\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/settings",
+              "host": ["{{base_url}}"],
+              "path": ["settings"]
+            }
+          }
+        },
+        {
+          "name": "Complete Tenant Onboarding",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Doxa Infotech Solutions\",\n  \"business_category\": \"IT Services\",\n  \"target_locations\": [\"Chennai\"],\n  \"services_offered\": [\"Software Solutions\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/onboarding",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Business Search & Discovery",
+      "item": [
+        {
+          "name": "Search Businesses via Google Places",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"keyword\": \"Dentist\",\n  \"location\": \"Chennai\",\n  \"category\": \"Dentist\",\n  \"radius\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/search/businesses",
+              "host": ["{{base_url}}"],
+              "path": ["search", "businesses"]
+            }
+          }
+        },
+        {
+          "name": "Get Search History",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/search/history",
+              "host": ["{{base_url}}"],
+              "path": ["search", "history"]
+            }
+          }
+        },
+        {
+          "name": "Get Search Query Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/search/1",
+              "host": ["{{base_url}}"],
+              "path": ["search", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Business Place Detail by Google Place ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/business/ChIJN1t_tDeuEmsRUsoyG83frY4",
+              "host": ["{{base_url}}"],
+              "path": ["business", "ChIJN1t_tDeuEmsRUsoyG83frY4"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Leads & CRM Management",
+      "item": [
+        {
+          "name": "List Paginated Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads?status=all&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["leads"],
+              "query": [
+                { "key": "status", "value": "all" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Lead (Manual or From Search)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('lead_id', jsonData.data.id);",
+                  "    console.log('Lead ID saved: ' + jsonData.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"business_name\": \"Apex Dental Care\",\n  \"category\": \"Dentist\",\n  \"location\": \"T Nagar, Chennai\",\n  \"phone\": \"+91 9444012345\",\n  \"email\": \"contact@apexdental.com\",\n  \"website\": \"https://apexdental.com\",\n  \"source\": \"google_search\",\n  \"status\": \"new\",\n  \"priority\": \"hot\",\n  \"opportunity_score\": 85,\n  \"expected_value\": 25000,\n  \"notes\": \"Interested in website redesign and local SEO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads",
+              "host": ["{{base_url}}"],
+              "path": ["leads"]
+            }
+          }
+        },
+        {
+          "name": "Get Lead Details by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"qualified\",\n  \"priority\": \"hot\",\n  \"expected_value\": 35000,\n  \"notes\": \"Client confirmed interest in 6-month SEO package.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Lead Status (Pipeline Movement)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"proposal\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Get Leads Kanban Pipeline Stages",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads/pipeline",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "pipeline"]
+            }
+          }
+        },
+        {
+          "name": "Assign Lead to Team Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{team_user_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}/assign",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Add Activity / Interaction Note",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"call\",\n  \"description\": \"Called Dr. Kumar. He requested a customized quotation for Google Ads and local maps ranking.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}/activity",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}", "activity"]
+            }
+          }
+        },
+        {
+          "name": "List Lead Activities & Timeline",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}/activities",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}", "activities"]
+            }
+          }
+        },
+        {
+          "name": "Export Leads as CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads/export",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "export"]
+            }
+          }
+        },
+        {
+          "name": "Delete Lead",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leads/{{lead_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["leads", "{{lead_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Follow-ups & Tasks",
+      "item": [
+        {
+          "name": "List Follow-ups",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/followups?status=scheduled",
+              "host": ["{{base_url}}"],
+              "path": ["followups"],
+              "query": [
+                { "key": "status", "value": "scheduled" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Follow-up Reminder",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('followup_id', jsonData.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lead_id\": {{lead_id}},\n  \"followup_date\": \"2026-08-25\",\n  \"followup_time\": \"14:30:00\",\n  \"type\": \"call\",\n  \"notes\": \"Follow up regarding pricing proposal sent yesterday.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/followups",
+              "host": ["{{base_url}}"],
+              "path": ["followups"]
+            }
+          }
+        },
+        {
+          "name": "Update / Complete Follow-up",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"outcome\": \"Client approved quotation. Preparing onboarding.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/followups/{{followup_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["followups", "{{followup_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Follow-up",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/followups/{{followup_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["followups", "{{followup_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Quotations & Deals",
+      "item": [
+        {
+          "name": "List Quotations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quotations",
+              "host": ["{{base_url}}"],
+              "path": ["quotations"]
+            }
+          }
+        },
+        {
+          "name": "Create Quotation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('quotation_id', jsonData.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lead_id\": {{lead_id}},\n  \"customer_name\": \"Apex Dental Care\",\n  \"customer_email\": \"contact@apexdental.com\",\n  \"customer_phone\": \"+91 9444012345\",\n  \"valid_until\": \"2026-09-30\",\n  \"items\": [\n    {\n      \"description\": \"Google My Business & Maps Optimization\",\n      \"quantity\": 1,\n      \"unit_price\": 12000,\n      \"total\": 12000\n    },\n    {\n      \"description\": \"Local SEO & Website Speed Optimization\",\n      \"quantity\": 1,\n      \"unit_price\": 18000,\n      \"total\": 18000\n    }\n  ],\n  \"subtotal\": 30000,\n  \"discount_amount\": 2000,\n  \"gst_amount\": 5040,\n  \"total\": 33040,\n  \"notes\": \"Includes 3 months of free maintenance support.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/quotations",
+              "host": ["{{base_url}}"],
+              "path": ["quotations"]
+            }
+          }
+        },
+        {
+          "name": "Get Quotation Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quotations/{{quotation_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["quotations", "{{quotation_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Send Quotation to Customer Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quotations/{{quotation_id}}/send",
+              "host": ["{{base_url}}"],
+              "path": ["quotations", "{{quotation_id}}", "send"]
+            }
+          }
+        },
+        {
+          "name": "Accept Quotation (Converts to Deal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quotations/{{quotation_id}}/accept",
+              "host": ["{{base_url}}"],
+              "path": ["quotations", "{{quotation_id}}", "accept"]
+            }
+          }
+        },
+        {
+          "name": "Reject Quotation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quotations/{{quotation_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["quotations", "{{quotation_id}}", "reject"]
+            }
+          }
+        },
+        {
+          "name": "List Deals",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/deals",
+              "host": ["{{base_url}}"],
+              "path": ["deals"]
+            }
+          }
+        },
+        {
+          "name": "Create Deal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lead_id\": {{lead_id}},\n  \"quotation_id\": {{quotation_id}},\n  \"deal_value\": 33040,\n  \"service\": \"SEO & Digital Presence Package\",\n  \"payment_status\": \"paid\",\n  \"closing_date\": \"2026-08-22\",\n  \"notes\": \"Payment confirmed via Bank Transfer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/deals",
+              "host": ["{{base_url}}"],
+              "path": ["deals"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Credit Wallet & Purchase",
+      "item": [
+        {
+          "name": "Get Wallet Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/credits",
+              "host": ["{{base_url}}"],
+              "path": ["credits"]
+            }
+          }
+        },
+        {
+          "name": "Get Credit Transactions History",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/credits/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["credits", "transactions"]
+            }
+          }
+        },
+        {
+          "name": "Get Available Credit Packages",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/credits/packages",
+              "host": ["{{base_url}}"],
+              "path": ["credits", "packages"]
+            }
+          }
+        },
+        {
+          "name": "Initiate Credit Package Purchase",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package_id\": {{package_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/credits/purchase",
+              "host": ["{{base_url}}"],
+              "path": ["credits", "purchase"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Subscriptions & Plans",
+      "item": [
+        {
+          "name": "List All Subscription Plans (Public)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/plans",
+              "host": ["{{base_url}}"],
+              "path": ["plans"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Tenant Subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/subscription",
+              "host": ["{{base_url}}"],
+              "path": ["subscription"]
+            }
+          }
+        },
+        {
+          "name": "Subscribe / Upgrade Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_id\": {{plan_id}},\n  \"billing_cycle\": \"monthly\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/subscription",
+              "host": ["{{base_url}}"],
+              "path": ["subscription"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Payments & Webhooks",
+      "item": [
+        {
+          "name": "Create Razorpay Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package_id\": {{package_id}},\n  \"amount\": 999,\n  \"currency\": \"INR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/create-order",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "create-order"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment Signature",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"razorpay_order_id\": \"order_TSJBaiQZ7KgFcy\",\n  \"razorpay_payment_id\": \"pay_TSJC1234567890\",\n  \"razorpay_signature\": \"mock_or_real_signature_hash\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/verify",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Razorpay Webhook Handler",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Razorpay-Signature", "value": "test_signature" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"payment.captured\",\n  \"payload\": {\n    \"payment\": {\n      \"entity\": {\n        \"id\": \"pay_test_123\",\n        \"order_id\": \"order_test_123\",\n        \"amount\": 99900,\n        \"status\": \"captured\"\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/webhook",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "webhook"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Team & Staff Management",
+      "item": [
+        {
+          "name": "List Team Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/team",
+              "host": ["{{base_url}}"],
+              "path": ["team"]
+            }
+          }
+        },
+        {
+          "name": "Invite / Add Team Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sales Executive\",\n  \"email\": \"sales.exec@doxainfotech.com\",\n  \"phone\": \"9876543211\",\n  \"role\": \"staff\",\n  \"password\": \"Executive@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/team",
+              "host": ["{{base_url}}"],
+              "path": ["team"]
+            }
+          }
+        },
+        {
+          "name": "Get Team Member Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/team/{{team_user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["team", "{{team_user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Team Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Senior Sales Executive\",\n  \"phone\": \"9876543299\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/team/{{team_user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["team", "{{team_user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Remove Team Member",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/team/{{team_user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["team", "{{team_user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Reports & Analytics",
+      "item": [
+        {
+          "name": "Get Dashboard Summary Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get Lead Funnel Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/leads?from=2026-08-01&to=2026-08-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "leads"],
+              "query": [
+                { "key": "from", "value": "2026-08-01" },
+                { "key": "to", "value": "2026-08-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales & Deals Pipeline Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/sales?from=2026-08-01&to=2026-08-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "sales"],
+              "query": [
+                { "key": "from", "value": "2026-08-01" },
+                { "key": "to", "value": "2026-08-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get API & Search Usage Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/usage",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "usage"]
+            }
+          }
+        },
+        {
+          "name": "Get Staff Performance Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/staff",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "staff"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. In-App Notifications",
+      "item": [
+        {
+          "name": "List User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/{{notification_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "{{notification_id}}", "read"]
+            }
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "read-all"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
