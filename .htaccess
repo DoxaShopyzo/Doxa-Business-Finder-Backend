@@ -1,10 +1,17 @@
-﻿<IfModule mod_rewrite.c>
-    RewriteEngine On
-    
-    # Block direct access to sensitive files
-    RewriteRule ^(\.env|\.git|composer\.(json|lock)|package\.(json|lock)|artisan|storage/logs/.*) - [F,L,NC]
-    
-    # Rewrite all requests to public/ subfolder
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteRule ^(.*)$ public/$1 [L]
-</IfModule>
+﻿# Block direct access to sensitive files only
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "artisan">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "composer.json">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "composer.lock">
+    Order allow,deny
+    Deny from all
+</Files>
